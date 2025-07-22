@@ -1,6 +1,7 @@
 const express=require('express')
 const cors=require('cors')
 const app=express();
+const jwt = require('jsonwebtoken')
 const port=process.env.PORT || 3000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
@@ -30,6 +31,15 @@ async function run() {
 
     const jobsCollection= client.db('careerCode').collection('jobs');
     const applicationsCollection = client.db('careerCode').collection('applications');
+
+    //jwt token related api
+    app.post('/jwt',async(req,res)=>{
+      const {email}=req.body;
+      const user={email}
+      const token = jwt.sign(user,'secret',{expiresIn:'1h'});
+      res.send({token})
+    })
+
 
     //jobs api
     app.get('/jobs',async(req,res)=>{
